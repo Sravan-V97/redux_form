@@ -15,9 +15,10 @@ import {
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import React from "react";
-import store from "./store";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useFormik } from "formik";
+import * as yup from "yup";
 
 const useStyles = makeStyles((theme) => ({
   container: { flexDirection: "row" },
@@ -62,41 +63,53 @@ const StyledTableCell = withStyles((theme) => ({
   },
 }))(TableCell);
 
+const validationSchema = yup.object({
+  userName: yup.string("Enter a name").required("Name is required"),
+  email: yup
+    .string("Enter your email")
+    .email("Enter a valid email")
+    .required("Email is required"),
+  phoneNumber: yup
+    .number("Enter your phone number")
+    .min(10, "Phone Number should be of minimum 10 numbers")
+    .required("Phone number is required"),
+  address: yup.string("Enter your address").required("Address is required"),
+});
+
 function Form() {
   const classes = useStyles();
   const [values, setValues] = React.useState({});
 
-  // const [data, setData] = React.useState({
-  //   savedValues: {
-  //     userName: "",
-  //     email: "",
-  //     phoneNumber: "",
-  //     address: "",
-  //   },
-  // });
+  const formik = useFormik({
+    initialValues: {
+      userName: "",
+      email: "",
+      phoneNumber: "",
+      address: "",
+    },
+    validationSchema: validationSchema,
+  });
 
   const handleInputChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
+  const dispatch = useDispatch();
 
   React.useEffect(() => {
-    store.dispatch({ type: "inputChange", payload: values });
-    console.log(values);
-    // let currentValue = store.getState();
-    // if (currentValue && currentValue.length) {
-    //   setData({
-    //     ...data,
-    //     savedValues: currentValue[currentValue.length - 1].formValues,
-    //   });
-    //   console.log(values);
-    // }
+    if (Object.keys(values).length === 0) {
+      return;
+    } else {
+      dispatch({ type: "inputChange", payload: values });
+      console.log(values);
+    }
   }, [values]);
 
   const updatedValues = useSelector((state) => state.formValues);
   console.log(updatedValues);
 
   const submitForm = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
+    formik.handleSubmit();
   };
   return (
     <Container>
@@ -121,9 +134,17 @@ function Form() {
                       fullWidth
                       id="userName"
                       label="User Name"
-                      value={values.uname}
+                      value={(values.uname, formik.values.userName)}
                       onInput={handleInputChange}
+                      onChange={formik.handleChange}
                       autoFocus
+                      error={
+                        formik.touched.userName &&
+                        Boolean(formik.errors.userName)
+                      }
+                      helperText={
+                        formik.touched.userName && formik.errors.userName
+                      }
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -134,8 +155,13 @@ function Form() {
                       label="Email Id"
                       name="email"
                       autoComplete="email"
-                      value={values.email}
+                      value={(values.uname, formik.values.email)}
                       onInput={handleInputChange}
+                      onChange={formik.handleChange}
+                      error={
+                        formik.touched.email && Boolean(formik.errors.email)
+                      }
+                      helperText={formik.touched.email && formik.errors.email}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -147,8 +173,16 @@ function Form() {
                       type="number"
                       id="phoneNumber"
                       autoComplete="phone-number"
-                      value={values.phone}
+                      value={(values.uname, formik.values.phoneNumber)}
                       onInput={handleInputChange}
+                      onChange={formik.handleChange}
+                      error={
+                        formik.touched.phoneNumber &&
+                        Boolean(formik.errors.phoneNumber)
+                      }
+                      helperText={
+                        formik.touched.phoneNumber && formik.errors.phoneNumber
+                      }
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -160,8 +194,15 @@ function Form() {
                       label="Address"
                       id="address"
                       autoComplete="address"
-                      value={values.address}
+                      value={(values.uname, formik.values.address)}
                       onInput={handleInputChange}
+                      onChange={formik.handleChange}
+                      error={
+                        formik.touched.address && Boolean(formik.errors.address)
+                      }
+                      helperText={
+                        formik.touched.address && formik.errors.address
+                      }
                     />
                   </Grid>
                 </Grid>
@@ -172,6 +213,7 @@ function Form() {
                     variant="contained"
                     color="primary"
                     className={classes.submit}
+                    // onClick={formik.handleSubmit}
                     onSubmit={submitForm}
                   >
                     Sign Up

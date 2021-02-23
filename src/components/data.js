@@ -8,7 +8,6 @@ import {
   TableRow,
 } from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import store from "./store";
 import React from "react";
 import { useSelector } from "react-redux";
 
