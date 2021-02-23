@@ -16,6 +16,7 @@ import { makeStyles, withStyles } from "@material-ui/core/styles";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import React from "react";
 import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -79,6 +80,7 @@ const validationSchema = yup.object({
 function Form() {
   const classes = useStyles();
   const [values, setValues] = React.useState({});
+  const history = useHistory();
 
   const formik = useFormik({
     initialValues: {
@@ -88,6 +90,10 @@ function Form() {
       address: "",
     },
     validationSchema: validationSchema,
+
+    onSubmit: () => {
+      history.push("/data");
+    },
   });
 
   const handleInputChange = (e) => {
@@ -107,10 +113,6 @@ function Form() {
   const updatedValues = useSelector((state) => state.formValues);
   console.log(updatedValues);
 
-  const submitForm = (e) => {
-    // e.preventDefault();
-    formik.handleSubmit();
-  };
   return (
     <Container>
       <Grid container className={classes.container}>
@@ -213,8 +215,7 @@ function Form() {
                     variant="contained"
                     color="primary"
                     className={classes.submit}
-                    // onClick={formik.handleSubmit}
-                    onSubmit={submitForm}
+                    onClick={formik.handleSubmit}
                   >
                     Sign Up
                   </Button>

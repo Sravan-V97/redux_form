@@ -44,26 +44,6 @@ const StyledTableCell = withStyles((theme) => ({
 function DataDisplay() {
   const classes = useStyles();
 
-  // const [data, setData] = React.useState({
-  //   savedValues: {
-  //     userName: "",
-  //     email: "",
-  //     phoneNumber: "",
-  //     address: "",
-  //   },
-  // });
-
-  // React.useEffect(() => {
-  //   let currentValue = store.getState();
-  //   if (currentValue && currentValue.length) {
-  //     setData({
-  //       ...data,
-  //       savedValues: currentValue[currentValue.length - 1].formValues,
-  //     });
-  //     console.log(data);
-  //   }
-  // }, []);
-
   const updatedValues = useSelector((state) => state.formValues);
 
   return (
