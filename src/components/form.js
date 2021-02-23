@@ -17,6 +17,7 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import React from "react";
 import store from "./store";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   container: { flexDirection: "row" },
@@ -65,31 +66,34 @@ function Form() {
   const classes = useStyles();
   const [values, setValues] = React.useState({});
 
-  const [data, setData] = React.useState({
-    savedValues: {
-      userName: "",
-      email: "",
-      phoneNumber: "",
-      address: "",
-    },
-  });
+  // const [data, setData] = React.useState({
+  //   savedValues: {
+  //     userName: "",
+  //     email: "",
+  //     phoneNumber: "",
+  //     address: "",
+  //   },
+  // });
 
   const handleInputChange = (e) => {
-    setValues({ ...values, [e.target.name]: e.target.value }, () => {});
+    setValues({ ...values, [e.target.name]: e.target.value });
   };
 
   React.useEffect(() => {
     store.dispatch({ type: "inputChange", payload: values });
-
-    let currentValue = store.getState();
-    if (currentValue && currentValue.length) {
-      setData({
-        ...data,
-        savedValues: currentValue[currentValue.length - 1].formValues,
-      });
-      console.log(data);
-    }
+    console.log(values);
+    // let currentValue = store.getState();
+    // if (currentValue && currentValue.length) {
+    //   setData({
+    //     ...data,
+    //     savedValues: currentValue[currentValue.length - 1].formValues,
+    //   });
+    //   console.log(values);
+    // }
   }, [values]);
+
+  const updatedValues = useSelector((state) => state.formValues);
+  console.log(updatedValues);
 
   const submitForm = (e) => {
     e.preventDefault();
@@ -187,25 +191,21 @@ function Form() {
               <TableBody>
                 <StyledTableRow>
                   <TableCell>User Name</TableCell>
-                  <TableCell align="right">
-                    {data.savedValues.userName}
-                  </TableCell>
+                  <TableCell align="right">{updatedValues?.userName}</TableCell>
                 </StyledTableRow>
                 <TableRow>
                   <TableCell>Email Id</TableCell>
-                  <TableCell align="right">{data.savedValues.email}</TableCell>
+                  <TableCell align="right">{updatedValues?.email}</TableCell>
                 </TableRow>
                 <StyledTableRow>
                   <TableCell>Phone Number</TableCell>
                   <TableCell align="right">
-                    {data.savedValues.phoneNumber}
+                    {updatedValues?.phoneNumber}
                   </TableCell>
                 </StyledTableRow>
                 <TableRow>
                   <TableCell>Address</TableCell>
-                  <TableCell align="right">
-                    {data.savedValues.address}
-                  </TableCell>
+                  <TableCell align="right">{updatedValues?.address}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>

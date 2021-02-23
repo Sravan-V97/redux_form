@@ -1,12 +1,12 @@
-function reducer(values = [], action) {
+function reducer(values = {}, action) {
   switch (action.type) {
     case "inputChange":
-      return [
-        ...values,
+      return (
+        values,
         {
           formValues: action.payload,
-        },
-      ];
+        }
+      );
 
     default:
       return values;

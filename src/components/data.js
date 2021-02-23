@@ -10,6 +10,7 @@ import {
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import store from "./store";
 import React from "react";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles(() => ({
   paper: {
@@ -44,25 +45,27 @@ const StyledTableCell = withStyles((theme) => ({
 function DataDisplay() {
   const classes = useStyles();
 
-  const [data, setData] = React.useState({
-    savedValues: {
-      userName: "",
-      email: "",
-      phoneNumber: "",
-      address: "",
-    },
-  });
+  // const [data, setData] = React.useState({
+  //   savedValues: {
+  //     userName: "",
+  //     email: "",
+  //     phoneNumber: "",
+  //     address: "",
+  //   },
+  // });
 
-  React.useEffect(() => {
-    let currentValue = store.getState();
-    if (currentValue && currentValue.length) {
-      setData({
-        ...data,
-        savedValues: currentValue[currentValue.length - 1].formValues,
-      });
-      console.log(data);
-    }
-  }, []);
+  // React.useEffect(() => {
+  //   let currentValue = store.getState();
+  //   if (currentValue && currentValue.length) {
+  //     setData({
+  //       ...data,
+  //       savedValues: currentValue[currentValue.length - 1].formValues,
+  //     });
+  //     console.log(data);
+  //   }
+  // }, []);
+
+  const updatedValues = useSelector((state) => state.formValues);
 
   return (
     <Grid item xs={12}>
@@ -77,21 +80,19 @@ function DataDisplay() {
           <TableBody>
             <StyledTableRow>
               <TableCell>User Name</TableCell>
-              <TableCell align="right">{data.savedValues.userName}</TableCell>
+              <TableCell align="right">{updatedValues?.userName}</TableCell>
             </StyledTableRow>
             <TableRow>
               <TableCell>Email Id</TableCell>
-              <TableCell align="right">{data.savedValues.email}</TableCell>
+              <TableCell align="right">{updatedValues?.email}</TableCell>
             </TableRow>
             <StyledTableRow>
               <TableCell>Phone Number</TableCell>
-              <TableCell align="right">
-                {data.savedValues.phoneNumber}
-              </TableCell>
+              <TableCell align="right">{updatedValues?.phoneNumber}</TableCell>
             </StyledTableRow>
             <TableRow>
               <TableCell>Address</TableCell>
-              <TableCell align="right">{data.savedValues.address}</TableCell>
+              <TableCell align="right">{updatedValues?.address}</TableCell>
             </TableRow>
           </TableBody>
         </Table>
